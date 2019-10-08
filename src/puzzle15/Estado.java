@@ -5,13 +5,32 @@ package puzzle15;
  */
 public class Estado implements Comparable<Estado>
 {
+    //attributos:
+   int[][] matriz;  
+   Estado padre;
+   int profundidad;
+   int hashCode;
+   int prioridad; //???
+    
 /**
  * Construye un estado a partir de un array de fichas.
  * @param f Lista de las 16 fichas (15 y el hueco) del puzzle.
  */
 public Estado(int...f)
 {
-    throw new UnsupportedOperationException("Falta implementar");
+    //throw new UnsupportedOperationException("Falta implementar");
+    matriz = new int[4][4];
+    int x = 0;
+    int y = 0;
+    for (int i:f){
+        matriz[x][y] = i;
+        if (y == 3){
+            x++;
+            y = 0;
+        }else{
+            y++;
+        }
+    }
 }
 
 /**
@@ -20,7 +39,8 @@ public Estado(int...f)
  */
 public Estado getPadre()
 {
-    throw new UnsupportedOperationException("Falta implementar");
+    //throw new UnsupportedOperationException("Falta implementar");
+    return padre;
 }
 
 /**
@@ -29,7 +49,8 @@ public Estado getPadre()
  */
 public int getProfundidad()
 {
-    throw new UnsupportedOperationException("Falta implementar");
+    //throw new UnsupportedOperationException("Falta implementar");
+    return profundidad;
 }
 
 /**
@@ -48,7 +69,16 @@ public int getProfundidad()
  */
 @Override public boolean equals(Object obj)
 {
-    throw new UnsupportedOperationException("Falta implementar");
+    //throw new UnsupportedOperationException("Falta implementar");
+    Estado estado = (Estado) obj;
+    for (int x=0; x<4; x++){
+        for (int y=0; y<4; y++){
+            if (this.matriz[x][y] != estado.matriz[x][y]){
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 /**
@@ -61,7 +91,16 @@ public int getProfundidad()
  */
 @Override public int compareTo(Estado e)
 {
-    throw new UnsupportedOperationException("Falta implementar");
+    //DUDA: que atributo determina si un estado es 'mayor' que otro? prof, prio..?
+    //throw new UnsupportedOperationException("Falta implementar");
+    if (this.profundidad < e.profundidad){
+        return -1;
+    }
+    else if (this.profundidad == e.profundidad){
+        return 0;
+    }else{
+        return 1;
+    }
 }
 
 /**
@@ -70,7 +109,18 @@ public int getProfundidad()
  */
 public boolean esObjetivo()
 {
-    throw new UnsupportedOperationException("Falta implementar");
+    //throw new UnsupportedOperationException("Falta implementar");
+    int val = 0;
+     for (int x=0; x<4; x++){
+        for (int y=0; y<4; y++){
+            if (this.matriz[x][y] != val){
+                return false;
+            }
+            val++;
+        
+        }
+     }
+        }
 }
 
 } // Estado
