@@ -24,8 +24,18 @@ private static final Estado puzzles[] = {
     new Estado(0,2,1,3, 4,5,6,7, 8,9,10,11, 12,13,14,15)  // 11: imposible
 };
 
+private static final Operador[] movimientos = {
+    e -> e.moverArriba(),
+    e -> e.moverAbajo()
+};
+
 private static Estado busquedaAnchura(Estado inicial)
 {
+    for(Operador m : movimientos)
+    {
+        Estado sucesor = m.run(inicial);
+    }
+    
     throw new UnsupportedOperationException("Falta implementar");
 }
 
