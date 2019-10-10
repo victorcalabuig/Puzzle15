@@ -9,6 +9,7 @@ public class Estado implements Comparable<Estado>
 {
     //attributos:
    private int[][] matriz;  
+   private int[] posHueco;
    private Estado padre;
    private int profundidad;
    private int hashCode;
@@ -21,11 +22,17 @@ public class Estado implements Comparable<Estado>
 public Estado(int...f)
 {
     //throw new UnsupportedOperationException("Falta implementar");
+    profundidad = 0;
+    posHueco = new int[2];
     matriz = new int[4][4];
     int x = 0;
     int y = 0;
     for (int i:f){
         matriz[x][y] = i;
+        if (i == 0){
+            posHueco[0] = x;
+            posHueco[1] = y;
+        }
         if (y == 3){
             x++;
             y = 0;
@@ -33,6 +40,21 @@ public Estado(int...f)
             y++;
         }
     }
+}
+
+public Estado(Estado e)
+{
+    profundidad = e.profundidad + 1;
+    posHueco = e.posHueco;
+    padre = e;
+    matriz = new int[4][4];
+    for(int x = 0; x<4; x++){
+        for (int y=0; y<4; y++){
+            matriz[x][y] = e.matriz[x][y];
+        }
+    }
+    
+    
 }
 
 /**
@@ -122,12 +144,73 @@ public boolean esObjetivo()
 
 public Estado moverArriba()
 {
-    return null;
+    if (this.posHueco[0] == 0){     //Si hueco en fila 0, no se puede mover 
+        return null;
+    }
+    else{
+        Estado sucesor = new Estado(this);
+        int x = posHueco[0];                    
+        int y = posHueco[1];
+        sucesor.matriz[x][y] = sucesor.matriz[x-1][y];
+        sucesor.matriz[x-1][y] = 0;     //movimiento del hueco
+        return sucesor;
+    }
 }
 
 public Estado moverAbajo()
 {
-    return null;
+    if (this.posHueco[0] == 3){     //Si hueco en fila 3, no se puede mover 
+        return null;
+    }
+    else{
+        Estado sucesor = new Estado(this);
+        int x = posHueco[0];                    
+        int y = posHueco[1];
+        sucesor.matriz[x][y] = sucesor.matriz[x+1][y];
+        sucesor.matriz[x+1][y] = 0;     //movimiento del hueco
+        return sucesor;
+    }
 }
+
+public Estado moverIzquirda()
+{
+    if (this.posHueco[1] == 0){     //Si hueco en columna 0, no se puede mover 
+        return null;
+    }
+    else{
+        Estado sucesor = new Estado(this);
+        int x = posHueco[0];                    
+        int y = posHueco[1];
+        sucesor.matriz[x][y] = sucesor.matriz[x][y-1];
+        sucesor.matriz[x][y-1] = 0;     //movimiento del hueco
+        return sucesor;
+    }
+}
+
+public Estado moverDerecha()
+{
+    if (this.posHueco[1] == 3){     //Si hueco en columna 3, no se puede mover 
+        return null;
+    }
+    else{
+        Estado sucesor = new Estado(this);
+        int x = posHueco[0];                    
+        int y = posHueco[1];
+        sucesor.matriz[x][y] = sucesor.matriz[x][y+1];
+        sucesor.matriz[x][y+1] = 0;     //movimiento del hueco
+        return sucesor;
+    }
+}
+
+
+
+public void Intercambio(int[] hueco, int[] i, int[][] matriz){
+    int x = hueco[0];
+    int y = hueco[1];
+    matriz[x][y] = matriz[i[0]][i[1]];
+    matriz[i[0]][i[1]] = 0;
+    // falta usarlo, es decir, sustituirlo arriba. 
+}
+
 
 } // Estado
