@@ -1,16 +1,18 @@
 package puzzle15;
 
+import java.util.Arrays;
+
 /**
  * Estado del 15-puzzle.
  */
 public class Estado implements Comparable<Estado>
 {
     //attributos:
-   int[][] matriz;  
-   Estado padre;
-   int profundidad;
-   int hashCode;
-   int prioridad; //???
+   private int[][] matriz;  
+   private Estado padre;
+   private int profundidad;
+   private int hashCode;
+   private int prioridad; //???
     
 /**
  * Construye un estado a partir de un array de fichas.
@@ -59,7 +61,7 @@ public int getProfundidad()
  */
 @Override public int hashCode()
 {
-    throw new UnsupportedOperationException("Falta implementar");
+    return Arrays.deepHashCode(matriz);
 }
 
 /**
@@ -69,16 +71,12 @@ public int getProfundidad()
  */
 @Override public boolean equals(Object obj)
 {
+    if(!(obj instanceof Estado))
+        return false;
+    
     //throw new UnsupportedOperationException("Falta implementar");
     Estado estado = (Estado) obj;
-    for (int x=0; x<4; x++){
-        for (int y=0; y<4; y++){
-            if (this.matriz[x][y] != estado.matriz[x][y]){
-                return false;
-            }
-        }
-    }
-    return true;
+    return compareTo(estado) == 0;
 }
 
 /**
@@ -91,16 +89,16 @@ public int getProfundidad()
  */
 @Override public int compareTo(Estado e)
 {
-    //DUDA: que atributo determina si un estado es 'mayor' que otro? prof, prio..?
-    //throw new UnsupportedOperationException("Falta implementar");
-    if (this.profundidad < e.profundidad){
-        return -1;
+    for (int x=0; x<4; x++){
+        for (int y=0; y<4; y++){
+            int r = Integer.compare(matriz[x][y], e.matriz[x][y]);
+            
+            if(r != 0)
+                return r;
+        }
     }
-    else if (this.profundidad == e.profundidad){
-        return 0;
-    }else{
-        return 1;
-    }
+    
+    return 0;
 }
 
 /**
@@ -120,6 +118,16 @@ public boolean esObjetivo()
         }
     }
     return true;        
+}
+
+public Estado moverArriba()
+{
+    return null;
+}
+
+public Estado moverAbajo()
+{
+    return null;
 }
 
 } // Estado
