@@ -38,30 +38,50 @@ private static Estado busquedaAnchura(Estado inicial)
     
     Estado actual = inicial;
     Estado ultimo = inicial;
-    //HashMap<T,T> cerrados;
+    HashMap<Integer, Estado> cerrados = new HashMap<>();
+    
     while (!actual.esObjetivo()){
-        //cerrados.add(actual)
+        cerrados.put(actual.hashCode(), actual);
+        
         for(Operador m : movimientos)
         {
             Estado sucesor = m.run(actual);
-            if(cerrados.get(sucesor) == null){  //si no es repetido, encolamos al final
+            
+            if(cerrados.get(sucesor.hashCode()) == null){  //si no es repetido, encolamos
                 ultimo.encolar(sucesor);
                 ultimo = sucesor;
-                actual = actual.getNext();
             }
-        }   
+        } 
+        actual = actual.getNext();
     }
     return actual;
     
     
+    /**
+    Estado actual = inicial;
+    for(Operador m : movimientos)
+        {
+            Estado sucesor = m.run(actual);
+            int estado = 2;
+            System.out.println();
+            System.out.println("Estado " + estado);
+            for(int x = 0; x<4; x++){
+                
+                for(int y = 0; y<4; y++){
+                    System.out.print(sucesor.getValorAt(x,y) + " ");
+                }
+                System.out.println();
+            }
+        }System.out.println();
+    return inicial;
+    */
     
-    
-    
-    
-    
+       
     //throw new UnsupportedOperationException("Falta implementar");
     
 }
+
+
 
 private static Estado busquedaProfundidad(Estado inicial, int limite)
 {

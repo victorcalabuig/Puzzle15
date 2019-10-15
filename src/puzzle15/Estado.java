@@ -209,6 +209,10 @@ public Estado getNext(){
     return next;
 }
 
+public int getValorAt(int x, int y){
+    return matriz[x][y];
+}
+
 
 
 public static void Intercambio(int[] hueco, int[] i, int[][] matriz){
