@@ -13,7 +13,8 @@ public class Estado implements Comparable<Estado>
    private Estado padre;
    private int profundidad;
    private int hashCode;
-   private int prioridad; //???
+   private Estado next;
+   
     
 /**
  * Construye un estado a partir de un array de fichas.
@@ -172,7 +173,7 @@ public Estado moverAbajo()
     }
 }
 
-public Estado moverIzquirda()
+public Estado moverIzquierda()
 {
     if (this.posHueco[1] == 0){     //Si hueco en columna 0, no se puede mover 
         return null;
@@ -194,23 +195,27 @@ public Estado moverDerecha()
     }
     else{
         Estado sucesor = new Estado(this);
-        int x = posHueco[0];                    
-        int y = posHueco[1];
-        sucesor.matriz[x][y] = sucesor.matriz[x][y+1];
-        sucesor.matriz[x][y+1] = 0;     //movimiento del hueco
+        int[] posNueva = { posHueco[0], posHueco[1]+1 };
+        Intercambio(posHueco, posNueva, sucesor.matriz);
         return sucesor;
     }
 }
 
+public void encolar(Estado e){
+    next = e;
+}
+
+public Estado getNext(){
+    return next;
+}
 
 
-public void Intercambio(int[] hueco, int[] i, int[][] matriz){
+
+public static void Intercambio(int[] hueco, int[] i, int[][] matriz){
     int x = hueco[0];
     int y = hueco[1];
     matriz[x][y] = matriz[i[0]][i[1]];
     matriz[i[0]][i[1]] = 0;
-    // falta usarlo, es decir, sustituirlo arriba. 
 }
-
 
 } // Estado

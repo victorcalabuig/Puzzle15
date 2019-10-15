@@ -1,5 +1,7 @@
 package puzzle15;
 
+import java.util.HashMap;
+
 /**
  * Implementación de varios algoritmos para resolver el 15-puzzle.
  */
@@ -26,17 +28,39 @@ private static final Estado puzzles[] = {
 
 private static final Operador[] movimientos = {
     e -> e.moverArriba(),
-    e -> e.moverAbajo()
+    e -> e.moverAbajo(),
+    e -> e.moverDerecha(),
+    e -> e.moverIzquierda()
 };
 
 private static Estado busquedaAnchura(Estado inicial)
 {
-    for(Operador m : movimientos)
-    {
-        Estado sucesor = m.run(inicial);
-    }
     
-    throw new UnsupportedOperationException("Falta implementar");
+    Estado actual = inicial;
+    Estado ultimo = inicial;
+    //HashMap<T,T> cerrados;
+    while (!actual.esObjetivo()){
+        //cerrados.add(actual)
+        for(Operador m : movimientos)
+        {
+            Estado sucesor = m.run(actual);
+            if(cerrados.get(sucesor) == null){  //si no es repetido, encolamos al final
+                ultimo.encolar(sucesor);
+                ultimo = sucesor;
+                actual = actual.getNext();
+            }
+        }   
+    }
+    return actual;
+    
+    
+    
+    
+    
+    
+    
+    //throw new UnsupportedOperationException("Falta implementar");
+    
 }
 
 private static Estado busquedaProfundidad(Estado inicial, int limite)
