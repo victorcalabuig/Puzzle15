@@ -12,8 +12,6 @@ public class Estado implements Comparable<Estado>
    private int[] posHueco;
    private Estado padre;
    private int profundidad;
-   private int hashCode;
-   private Estado next;
    
     
 /**
@@ -46,11 +44,16 @@ public Estado(int...f)
 public Estado(Estado e)
 {
     profundidad = e.profundidad + 1;
-    posHueco = e.posHueco;
+    int x = e.posHueco[0];
+    int y = e.posHueco[1];
+    posHueco = new int[2];
+    posHueco[0] = x;
+    posHueco[1] = y;
+    
     padre = e;
     matriz = new int[4][4];
-    for(int x = 0; x<4; x++){
-        for (int y=0; y<4; y++){
+    for(x = 0; x<4; x++){
+        for (y=0; y<4; y++){
             matriz[x][y] = e.matriz[x][y];
         }
     }
@@ -154,6 +157,7 @@ public Estado moverArriba()
         int y = posHueco[1];
         sucesor.matriz[x][y] = sucesor.matriz[x-1][y];
         sucesor.matriz[x-1][y] = 0;     //movimiento del hueco
+        sucesor.posHueco[0] = x-1;
         return sucesor;
     }
 }
@@ -165,10 +169,14 @@ public Estado moverAbajo()
     }
     else{
         Estado sucesor = new Estado(this);
+        System.out.println("posHueco = " + posHueco[0]+","+posHueco[1]);
+        
         int x = posHueco[0];                    
         int y = posHueco[1];
         sucesor.matriz[x][y] = sucesor.matriz[x+1][y];
         sucesor.matriz[x+1][y] = 0;     //movimiento del hueco
+        sucesor.posHueco[0] = x+1;
+    
         return sucesor;
     }
 }
@@ -184,6 +192,7 @@ public Estado moverIzquierda()
         int y = posHueco[1];
         sucesor.matriz[x][y] = sucesor.matriz[x][y-1];
         sucesor.matriz[x][y-1] = 0;     //movimiento del hueco
+        sucesor.posHueco[1] = y-1;
         return sucesor;
     }
 }
@@ -197,17 +206,14 @@ public Estado moverDerecha()
         Estado sucesor = new Estado(this);
         int[] posNueva = { posHueco[0], posHueco[1]+1 };
         Intercambio(posHueco, posNueva, sucesor.matriz);
+        sucesor.posHueco[1] = posHueco[1]+1;
         return sucesor;
     }
 }
 
-public void encolar(Estado e){
-    next = e;
-}
 
-public Estado getNext(){
-    return next;
-}
+
+
 
 public int getValorAt(int x, int y){
     return matriz[x][y];

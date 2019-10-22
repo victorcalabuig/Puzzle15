@@ -1,6 +1,6 @@
 package puzzle15;
 
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Implementación de varios algoritmos para resolver el 15-puzzle.
@@ -35,52 +35,46 @@ private static final Operador[] movimientos = {
 
 private static Estado busquedaAnchura(Estado inicial)
 {
+    HashSet<Estado> repetidos = new HashSet<>();
+    LinkedList<Estado> abiertos = new LinkedList<>();
+    abiertos.add(inicial);
     
-    Estado actual = inicial;
-    Estado ultimo = inicial;
-    HashMap<Integer, Estado> cerrados = new HashMap<>();
-    
-    while (!actual.esObjetivo()){
-        cerrados.put(actual.hashCode(), actual);
-        
-        for(Operador m : movimientos)
-        {
-            Estado sucesor = m.run(actual);
-            
-            if(cerrados.get(sucesor.hashCode()) == null){  //si no es repetido, encolamos
-                ultimo.encolar(sucesor);
-                ultimo = sucesor;
+    nodosExplorados = 0;
+    while(!abiertos.isEmpty()){
+        Estado actual = abiertos.removeFirst();
+        if(actual.esObjetivo()){
+            System.out.println("Respuesta: ");
+            for(int a=0; a<4; a++){
+                System.out.println();
+                for(int b=0; b<4; b++){
+                    System.out.print(actual.getValorAt(a, b)+" ");
+                }
             }
-        } 
-        actual = actual.getNext();
-    }
-    return actual;
-    
-    
-    /**
-    Estado actual = inicial;
-    for(Operador m : movimientos)
-        {
-            Estado sucesor = m.run(actual);
-            int estado = 2;
-            System.out.println();
-            System.out.println("Estado " + estado);
-            for(int x = 0; x<4; x++){
-                
-                for(int y = 0; y<4; y++){
-                    System.out.print(sucesor.getValorAt(x,y) + " ");
+            return actual;
+        }
+        
+        for(Operador o : movimientos){
+            Estado sucesor = o.run(actual);
+            nodosExplorados++;
+            System.out.print(nodosExplorados);
+            if(sucesor != null){
+                for(int x=0; x<4; x++){
+
+                    System.out.println();
+                    for(int y=0; y<4; y++){
+                        System.out.print(sucesor.getValorAt(x,y)+" ");
+                    }
                 }
                 System.out.println();
-            }
-        }System.out.println();
-    return inicial;
-    */
-    
-       
-    //throw new UnsupportedOperationException("Falta implementar");
-    
-}
 
+                if(sucesor != null && repetidos.add(sucesor))
+                    abiertos.add(sucesor);
+            }
+        }
+    }
+    return null;
+   
+}   
 
 
 private static Estado busquedaProfundidad(Estado inicial, int limite)
@@ -120,6 +114,32 @@ private static void printSolucion(String algoritmo, Estado e)
 
     System.out.println("Nodos explorados: "+ nodosExplorados);
     System.out.println("    Milisegundos: "+ milisTotal);
+    System.out.println();
+    printTraza(e);
+}
+
+private static void printTraza(Estado e){
+    
+    if(e.getPadre() == null){
+        System.out.println("------------");   
+        for(int a=0; a<4; a++){
+            System.out.println();
+            for(int b=0; b<4; b++){
+                System.out.print(e.getValorAt(a, b)+" ");
+            }
+       }
+    }
+    else {
+        printTraza(e.getPadre());
+            }
+    System.out.println("------------");
+    for(int a=0; a<4; a++){
+                System.out.println();
+                for(int b=0; b<4; b++){
+                    System.out.print(e.getValorAt(a, b)+" ");
+                }
+    }
+        
 }
 
 public static void main(String args[])
