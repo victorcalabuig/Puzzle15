@@ -43,30 +43,13 @@ private static Estado busquedaAnchura(Estado inicial)
     while(!abiertos.isEmpty()){
         Estado actual = abiertos.removeFirst();
         if(actual.esObjetivo()){
-            System.out.println("Respuesta: ");
-            for(int a=0; a<4; a++){
-                System.out.println();
-                for(int b=0; b<4; b++){
-                    System.out.print(actual.getValorAt(a, b)+" ");
-                }
-            }
             return actual;
         }
         
         for(Operador o : movimientos){
             Estado sucesor = o.run(actual);
             nodosExplorados++;
-            System.out.print(nodosExplorados);
             if(sucesor != null){
-                for(int x=0; x<4; x++){
-
-                    System.out.println();
-                    for(int y=0; y<4; y++){
-                        System.out.print(sucesor.getValorAt(x,y)+" ");
-                    }
-                }
-                System.out.println();
-
                 if(sucesor != null && repetidos.add(sucesor))
                     abiertos.add(sucesor);
             }
@@ -122,24 +105,13 @@ private static void printTraza(Estado e){
     
     if(e.getPadre() == null){
         System.out.println("------------");   
-        for(int a=0; a<4; a++){
-            System.out.println();
-            for(int b=0; b<4; b++){
-                System.out.print(e.getValorAt(a, b)+" ");
-            }
-       }
+        System.out.println(e);
     }
     else {
         printTraza(e.getPadre());
             }
     System.out.println("------------");
-    for(int a=0; a<4; a++){
-                System.out.println();
-                for(int b=0; b<4; b++){
-                    System.out.print(e.getValorAt(a, b)+" ");
-                }
-    }
-        
+    System.out.println(e);
 }
 
 public static void main(String args[])
