@@ -168,9 +168,7 @@ public Estado moverAbajo()
         return null;
     }
     else{
-        Estado sucesor = new Estado(this);
-        System.out.println("posHueco = " + posHueco[0]+","+posHueco[1]);
-        
+        Estado sucesor = new Estado(this);        
         int x = posHueco[0];                    
         int y = posHueco[1];
         sucesor.matriz[x][y] = sucesor.matriz[x+1][y];
@@ -226,6 +224,26 @@ public static void Intercambio(int[] hueco, int[] i, int[][] matriz){
     int y = hueco[1];
     matriz[x][y] = matriz[i[0]][i[1]];
     matriz[i[0]][i[1]] = 0;
+}
+
+@Override public String toString()
+{
+    StringBuilder sb = new StringBuilder();
+    
+    for(int x=0; x<4; x++){
+        for(int y=0; y<4; y++){
+            int ficha = matriz[x][y];
+            
+            if(ficha == 0)
+                sb.append("   ");
+            else
+                sb.append(String.format("%3d", ficha));
+        }
+        
+        sb.append('\n');
+    }
+
+    return sb.toString();
 }
 
 } // Estado
