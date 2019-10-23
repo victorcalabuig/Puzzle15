@@ -62,7 +62,27 @@ private static Estado busquedaAnchura(Estado inicial)
 
 private static Estado busquedaProfundidad(Estado inicial, int limite)
 {
-    throw new UnsupportedOperationException("Falta implementar");
+    nodosExplorados = 0;
+    HashSet<Estado> repetidos = new HashSet<>();
+    Stack<Estado> abiertos = new Stack<>();
+    abiertos.add(inicial);
+    while(!abiertos.isEmpty()){
+        Estado actual = abiertos.pop();
+        if(actual.esObjetivo())
+            return actual;
+        
+        if(actual.getProfundidad() < limite){
+            for(Operador o : movimientos){
+                Estado sucesor = o.run(actual);
+                nodosExplorados++;                  //¿¿quizá debería ponerse despues de comprobar si no es repetido??
+            
+                if(sucesor != null && repetidos.add(sucesor))
+                    abiertos.add(sucesor);
+            }
+        }    
+    }
+
+    return null;
 }
 
 private static Estado busquedaProfundidadIterativa(Estado inicial, int limite)
