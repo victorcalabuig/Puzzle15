@@ -85,6 +85,7 @@ private static Estado busquedaProfundidad(Estado inicial, int limite)
     return null;
 }
 
+
 private static Estado busquedaProfundidadIterativa(Estado inicial, int limite)
 {
     nodosExplorados = 0;
@@ -99,9 +100,20 @@ private static Estado busquedaProfundidadIterativa(Estado inicial, int limite)
     return null;
 }
 
+Heuristica comparador = 
+
 private static Estado busquedaHeuristicaDescolocadas(Estado inicial)
 {
-    throw new UnsupportedOperationException("Falta implementar");
+    HashSet<Estado> repetidos = new HashSet<>();
+    PriorityQueue<Estado> abiertos = new PriorityQueue<Estado>(???);
+    
+    
+    
+    
+    
+    
+    
+    return null;
 }
 
 private static Estado busquedaHeuristicaManhattan(Estado inicial)
