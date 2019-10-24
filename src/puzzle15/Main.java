@@ -87,7 +87,16 @@ private static Estado busquedaProfundidad(Estado inicial, int limite)
 
 private static Estado busquedaProfundidadIterativa(Estado inicial, int limite)
 {
-    throw new UnsupportedOperationException("Falta implementar");
+    nodosExplorados = 0;
+    int profundidad = 0;
+    while(profundidad < limite){
+       Estado solucion = busquedaProfundidad(inicial, profundidad);
+       if(solucion != null)
+           return solucion;
+       else
+           profundidad++;
+    }
+    return null;
 }
 
 private static Estado busquedaHeuristicaDescolocadas(Estado inicial)
