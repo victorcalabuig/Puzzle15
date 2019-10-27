@@ -20,6 +20,9 @@ public interface Heuristica extends Comparator<Estado>
         r = getG(a) - getG(b) + h;
 
     return r == 0 ? h : r;
+    /*
+    operador condicional
+    */
 }
 
 /**

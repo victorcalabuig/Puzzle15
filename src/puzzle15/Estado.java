@@ -1,5 +1,6 @@
 package puzzle15;
 
+
 import java.util.Arrays;
 
 /**
@@ -20,6 +21,9 @@ public class Estado implements Comparable<Estado>
  */
 public Estado(int...f)
 {
+    /*
+    Aquí hay que comprobar que hay 16 fichas, y que no hay fichas repetidas. 
+    */
     //throw new UnsupportedOperationException("Falta implementar");
     profundidad = 0;
     posHueco = new int[2];
@@ -88,6 +92,7 @@ public int getProfundidad()
 @Override public int hashCode()
 {
     return Arrays.deepHashCode(matriz);
+    //si fuera array: return Arrays.hashCode(array);
 }
 
 /**
@@ -97,6 +102,10 @@ public int getProfundidad()
  */
 @Override public boolean equals(Object obj)
 {
+    /*if(obj == this){
+        return true;
+    */
+    
     if(!(obj instanceof Estado))
         return false;
     
@@ -133,6 +142,9 @@ public int getProfundidad()
  */
 public boolean esObjetivo()
 {
+    /*
+    matriz[i][j] == i*4 +j;
+    */
     //throw new UnsupportedOperationException("Falta implementar");
     int val = 0;
     for (int x=0; x<4; x++){
@@ -148,6 +160,11 @@ public boolean esObjetivo()
 
 public Estado moverArriba()
 {
+    /*
+    Estado s = new Estado(this);
+    mover el hueco en s
+    return s;
+    */
     if (this.posHueco[0] == 0){     //Si hueco en fila 0, no se puede mover 
         return null;
     }
@@ -203,7 +220,7 @@ public Estado moverDerecha()
     else{
         Estado sucesor = new Estado(this);
         int[] posNueva = { posHueco[0], posHueco[1]+1 };
-        Intercambio(posHueco, posNueva, sucesor.matriz);
+        intercambio(posHueco, posNueva, sucesor.matriz);
         sucesor.posHueco[1] = posHueco[1]+1;
         return sucesor;
     }
@@ -219,11 +236,21 @@ public int getValorAt(int x, int y){
 
 
 
-public static void Intercambio(int[] hueco, int[] i, int[][] matriz){
+public static void intercambio(int[] hueco, int[] i, int[][] matriz){
     int x = hueco[0];
     int y = hueco[1];
     matriz[x][y] = matriz[i[0]][i[1]];
     matriz[i[0]][i[1]] = 0;
+}
+
+public int getFichasDescolocadas()
+{
+    return 0;
+}
+
+public int getDistanciasManhattan()
+{
+    return 0;
 }
 
 @Override public String toString()
@@ -244,6 +271,21 @@ public static void Intercambio(int[] hueco, int[] i, int[][] matriz){
     }
 
     return sb.toString();
+    
+    /*
+    Si lo tuvieramos como array:
+    for (int i = 0; i < 16; i++)
+    {
+        int ficha = array[i];
+        
+        if(ficha == 0)
+            sb.append("   ");
+        else
+            sb.append(String.format("%3d", ficha);
+        if(i%4 == 3)
+            sb.append('\n');
+    }
+    */
 }
 
 } // Estado

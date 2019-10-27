@@ -1,6 +1,7 @@
 package puzzle15;
 
 import java.util.*;
+import lib.*;
 
 /**
  * Implementación de varios algoritmos para resolver el 15-puzzle.
@@ -35,6 +36,14 @@ private static final Operador[] movimientos = {
 
 private static Estado busquedaAnchura(Estado inicial)
 {
+    //hashset solo funciona bien porque tenemos bien definido el método equals
+    //y el metodo hashcode. Además hashcode tiene que ser congruente con la 
+    //función equals. 2 estados distintos podrían devolver el mismo hash, que 
+    //será una colisión. 
+    /*
+    Para que haya consonancia entre hashcode e equals, si hash solo tiene en
+    cuenta la matriz, el equals solo tendrá que comprobar la matriz. 
+    */
     HashSet<Estado> repetidos = new HashSet<>();
     LinkedList<Estado> abiertos = new LinkedList<>();
     abiertos.add(inicial);
@@ -59,7 +68,9 @@ private static Estado busquedaAnchura(Estado inicial)
    
 }   
 
-
+/*
+Se puede implementar de forma recursiva, sería una buena práctica.
+*/
 private static Estado busquedaProfundidad(Estado inicial, int limite)
 {
     nodosExplorados = 0;
@@ -99,26 +110,30 @@ private static Estado busquedaProfundidadIterativa(Estado inicial, int limite)
     }
     return null;
 }
+/*
+Heuristica f = e -> e.getFichasDescolocadas();
+*/
 
-Heuristica comparador = 
-
-private static Estado busquedaHeuristicaDescolocadas(Estado inicial)
+/*
+las dos heurísticas van a ser iguales. Lo ideal será una función busqueda
+heurística 
+*/
+private static Estado busquedaHeuristica(Estado inicial, Heuristica f)
 {
     HashSet<Estado> repetidos = new HashSet<>();
-    PriorityQueue<Estado> abiertos = new PriorityQueue<Estado>(???);
-    
-    
-    
-    
-    
-    
+    XPriorityQueue<Estado> abiertos = new XPriorityQueue<>(f);
     
     return null;
 }
 
+private static Estado busquedaHeuristicaDescolocadas(Estado inicial)
+{
+    return busquedaHeuristica(inicial, e -> e.getFichasDescolocadas());
+}
+
 private static Estado busquedaHeuristicaManhattan(Estado inicial)
 {
-    throw new UnsupportedOperationException("Falta implementar");
+    return busquedaHeuristica(inicial, e -> e.getDistanciasManhattan());
 }
 
 private static void printSolucion(String algoritmo, Estado e)

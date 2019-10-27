@@ -8,6 +8,11 @@ import java.util.*;
  */
 public class XPriorityQueue<T extends Comparable<T>> implements Iterable<T>
 {
+    /*
+    la de java no nos permite hacer lo que queremos para comprobar si un elemento
+    esta en la cola de prioridad, dame el que tienes para poder comprobar la 
+    prioridad. 
+    */
 private final HashMap<T,T> map = new HashMap<>();
 private final TreeSet<T> set;
 

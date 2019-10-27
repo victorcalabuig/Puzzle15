@@ -8,6 +8,11 @@ import java.util.*;
  * @param <T> Tipo de los elementos almacenados en el conjunto.
  */
 public class XHashSet<T> implements Iterable<T>
+        /*
+        pg 41 del tema 2
+        hay que comprobar si esta en cerrados, y hay que comprobar si está en 
+        abiertos. Sirve para comprobar profundidades 
+        */
 {
 private final HashMap<T,T> map = new HashMap<>();
 
