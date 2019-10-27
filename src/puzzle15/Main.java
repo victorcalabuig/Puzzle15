@@ -53,12 +53,11 @@ private static Estado busquedaAnchura(Estado inicial)
         
         for(Operador o : movimientos){
             Estado sucesor = o.run(actual);
-            if(sucesor != null){
-                if(sucesor != null && repetidos.add(sucesor)){
-                    nodosExplorados++;
-                    abiertos.add(sucesor);
-                }
+            if(sucesor != null && repetidos.add(sucesor)){
+                nodosExplorados++;
+                abiertos.add(sucesor);
             }
+            
         }
     }
     return null;
