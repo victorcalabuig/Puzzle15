@@ -11,6 +11,16 @@ public class Main
 private static long milisInicio;
 private static int  nodosExplorados;
 
+private static final Operador[] movimientos = {
+    e -> e.moverArriba(),
+    e -> e.moverAbajo(),
+    e -> e.moverDerecha(),
+    e -> e.moverIzquierda()
+};
+
+private static final Heuristica descolocadas = e -> e.getFichasDescolocadas();
+private static final Heuristica manhattan = e -> e.getDistanciasManhattan();
+
 private static final Estado puzzles[] = {
     // Los comentario indican el indice y la profundidad de la solución.
     new Estado(1,2,3,7, 8,4,5,6, 9,10,0,11, 12,13,14,15), //  0: 10
@@ -27,23 +37,9 @@ private static final Estado puzzles[] = {
     new Estado(0,2,1,3, 4,5,6,7, 8,9,10,11, 12,13,14,15)  // 11: imposible
 };
 
-private static final Operador[] movimientos = {
-    e -> e.moverArriba(),
-    e -> e.moverAbajo(),
-    e -> e.moverDerecha(),
-    e -> e.moverIzquierda()
-};
 
 private static Estado busquedaAnchura(Estado inicial)
 {
-    //hashset solo funciona bien porque tenemos bien definido el método equals
-    //y el metodo hashcode. Además hashcode tiene que ser congruente con la 
-    //función equals. 2 estados distintos podrían devolver el mismo hash, que 
-    //será una colisión. 
-    /*
-    Para que haya consonancia entre hashcode e equals, si hash solo tiene en
-    cuenta la matriz, el equals solo tendrá que comprobar la matriz. 
-    */
     HashSet<Estado> repetidos = new HashSet<>();
     LinkedList<Estado> abiertos = new LinkedList<>();
     abiertos.add(inicial);
@@ -69,12 +65,46 @@ private static Estado busquedaAnchura(Estado inicial)
    
 }   
 
+
 /*
 Se puede implementar de forma recursiva, sería una buena práctica.
 */
 private static Estado busquedaProfundidad(Estado inicial, int limite)
 {
     nodosExplorados = 0;
+    return busquedaProfundidadAux(inicial, limite);
+}
+
+
+private static Estado busquedaProfundidadIterativa(Estado inicial, int limite)
+{
+    nodosExplorados = 0;
+    int profundidad = 0;
+    while(profundidad < limite){
+       Estado solucion = busquedaProfundidadAux(inicial, profundidad);
+       if(solucion != null)
+           return solucion;
+       else
+           profundidad++;
+    }
+    return null;
+}
+
+
+private static Estado busquedaHeuristicaDescolocadas(Estado inicial)
+{
+    return busquedaHeuristica(inicial, descolocadas);
+}
+
+
+private static Estado busquedaHeuristicaManhattan(Estado inicial)
+{
+    return busquedaHeuristica(inicial, manhattan);
+}
+
+
+private static Estado busquedaProfundidadAux(Estado inicial, int limite)
+{
     HashSet<Estado> repetidos = new HashSet<>();
     Stack<Estado> abiertos = new Stack<>();
     abiertos.add(inicial);
@@ -95,33 +125,10 @@ private static Estado busquedaProfundidad(Estado inicial, int limite)
             }
         }    
     }
-
-    return null;
+    return null;    
 }
 
 
-private static Estado busquedaProfundidadIterativa(Estado inicial, int limite)
-{
-    nodosExplorados = 0;
-    int profundidad = 0;
-    while(profundidad < limite){
-       Estado solucion = busquedaProfundidad(inicial, profundidad);
-       if(solucion != null)
-           return solucion;
-       else
-           profundidad++;
-    }
-    return null;
-}
-
-
-
-private static final Heuristica descolocadas = e -> e.getFichasDescolocadas();
-private static final Heuristica manhattan = e -> e.getDistanciasManhattan();
-/*
-las dos heurísticas van a ser iguales. Lo ideal será una función busqueda
-heurística 
-*/
 private static Estado busquedaHeuristica(Estado inicial, Heuristica f)
 {
     HashSet<Estado> repetidos = new HashSet<>();
@@ -145,15 +152,6 @@ private static Estado busquedaHeuristica(Estado inicial, Heuristica f)
     return null;
 }
 
-private static Estado busquedaHeuristicaDescolocadas(Estado inicial)
-{
-    return busquedaHeuristica(inicial, descolocadas);
-}
-
-private static Estado busquedaHeuristicaManhattan(Estado inicial)
-{
-    return busquedaHeuristica(inicial, manhattan);
-}
 
 private static void printSolucion(String algoritmo, Estado e)
 {
@@ -173,9 +171,9 @@ private static void printSolucion(String algoritmo, Estado e)
 
     System.out.println("Nodos explorados: "+ nodosExplorados);
     System.out.println("    Milisegundos: "+ milisTotal);
-    System.out.println();
-    
+    System.out.println(); 
 }
+
 
 private static void printTraza(Estado e){
     
@@ -189,6 +187,7 @@ private static void printTraza(Estado e){
     System.out.println("------------");
     System.out.println(e);
 }
+
 
 public static void main(String args[])
 {
