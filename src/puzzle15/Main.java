@@ -57,10 +57,11 @@ private static Estado busquedaAnchura(Estado inicial)
         
         for(Operador o : movimientos){
             Estado sucesor = o.run(actual);
-            nodosExplorados++;
             if(sucesor != null){
-                if(sucesor != null && repetidos.add(sucesor))
+                if(sucesor != null && repetidos.add(sucesor)){
+                    nodosExplorados++;
                     abiertos.add(sucesor);
+                }
             }
         }
     }
@@ -85,10 +86,12 @@ private static Estado busquedaProfundidad(Estado inicial, int limite)
         if(actual.getProfundidad() < limite){
             for(Operador o : movimientos){
                 Estado sucesor = o.run(actual);
-                nodosExplorados++;                  //¿¿quizá debería ponerse despues de comprobar si no es repetido??
+                                  //¿¿quizá debería ponerse despues de comprobar si no es repetido??
             
-                if(sucesor != null && repetidos.add(sucesor))
+                if(sucesor != null && repetidos.add(sucesor)){
                     abiertos.add(sucesor);
+                    nodosExplorados++;
+                }
             }
         }    
     }
@@ -110,10 +113,11 @@ private static Estado busquedaProfundidadIterativa(Estado inicial, int limite)
     }
     return null;
 }
-/*
-Heuristica f = e -> e.getFichasDescolocadas();
-*/
 
+
+
+private static final Heuristica descolocadas = e -> e.getFichasDescolocadas();
+private static final Heuristica manhattan = e -> e.getDistanciasManhattan();
 /*
 las dos heurísticas van a ser iguales. Lo ideal será una función busqueda
 heurística 
@@ -121,25 +125,41 @@ heurística
 private static Estado busquedaHeuristica(Estado inicial, Heuristica f)
 {
     HashSet<Estado> repetidos = new HashSet<>();
-    XPriorityQueue<Estado> abiertos = new XPriorityQueue<>(f);
+    XPriorityQueue<Estado> abiertos = new XPriorityQueue<Estado>(f);
+    abiertos.add(inicial);
+    nodosExplorados = 0;
     
+    while(!abiertos.isEmpty()){
+        Estado actual = abiertos.poll();
+        if(actual.esObjetivo()){
+            return actual;
+        }
+        
+        for(Operador o : movimientos){
+            Estado sucesor = o.run(actual);
+            nodosExplorados++;
+            if(sucesor != null && repetidos.add(sucesor))
+                abiertos.add(sucesor);
+        }
+    }
     return null;
 }
 
 private static Estado busquedaHeuristicaDescolocadas(Estado inicial)
 {
-    return busquedaHeuristica(inicial, e -> e.getFichasDescolocadas());
+    return busquedaHeuristica(inicial, descolocadas);
 }
 
 private static Estado busquedaHeuristicaManhattan(Estado inicial)
 {
-    return busquedaHeuristica(inicial, e -> e.getDistanciasManhattan());
+    return busquedaHeuristica(inicial, manhattan);
 }
 
 private static void printSolucion(String algoritmo, Estado e)
 {
     long milisTotal = System.currentTimeMillis() - milisInicio;
     System.out.println("\n"+ algoritmo);
+    printTraza(e);
 
     if(e == null)
     {
@@ -154,7 +174,7 @@ private static void printSolucion(String algoritmo, Estado e)
     System.out.println("Nodos explorados: "+ nodosExplorados);
     System.out.println("    Milisegundos: "+ milisTotal);
     System.out.println();
-    printTraza(e);
+    
 }
 
 private static void printTraza(Estado e){

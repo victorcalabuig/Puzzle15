@@ -245,13 +245,60 @@ public static void intercambio(int[] hueco, int[] i, int[][] matriz){
 
 public int getFichasDescolocadas()
 {
-    return 0;
+    int descolocadas = 0;
+    int val = 0;
+    for(int x = 0; x < 4; x++){
+        for(int y = 0; y < 4; y++){
+            if(val != this.getValorAt(x,y))
+                descolocadas++;
+            val++;
+        }
+    }
+    return descolocadas;
 }
 
 public int getDistanciasManhattan()
 {
-    return 0;
+    int distancia = 0;
+    int correcta = 0;
+    for(int x = 0; x < 4; x++){
+        for(int y = 0; y < 4; y++){
+            if(matriz[x][y] != correcta && correcta != 0){
+                int[] posActual = {x,y};
+                int[] posFicha = encontrar(correcta);
+                distancia += getDistancia(posActual, posFicha);
+            }
+            correcta++;
+        }
+    }
+    return distancia;
 }
+
+/*
+Encuentra la posición de una ficha en la matriz del estado
+*/
+private int[] encontrar(int ficha)
+{
+    int[] pos = new int[2];
+    for(int x = 0; x < 4; x++){
+        for(int y = 0; y < 4; y++){
+            if(matriz[x][y] == ficha){
+                pos[0]=x;
+                pos[1]=y;
+                break;
+            }  
+        }
+    }
+    return pos;
+}
+
+private int getDistancia(int[] a, int[] b){
+    int distX = Math.abs(a[0] - b[0]);
+    int distY = Math.abs(a[1] - b[1]);
+    return distX + distY;
+}
+
+
 
 @Override public String toString()
 {
