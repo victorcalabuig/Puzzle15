@@ -130,27 +130,53 @@ private static Estado busquedaProfundidadAux(Estado inicial, int limite)
 
 private static Estado busquedaHeuristica(Estado inicial, Heuristica f)
 {
-    HashSet<Estado> repetidos = new HashSet<>();
-    XPriorityQueue<Estado> abiertos = new XPriorityQueue<Estado>(f);
+    XHashSet<Estado> repetidos = new XHashSet<>();
+    XPriorityQueue<Estado> abiertos = new XPriorityQueue<>(f);
     abiertos.add(inicial);
     nodosExplorados = 0;
     
     while(!abiertos.isEmpty()){
         Estado actual = abiertos.poll();
+        nodosExplorados++;
+        repetidos.add(actual);
+
         if(actual.esObjetivo()){
             return actual;
         }
         
         for(Operador o : movimientos){
             Estado sucesor = o.run(actual);
-            nodosExplorados++;
-            if(sucesor != null && repetidos.add(sucesor))
-                abiertos.add(sucesor);
+            if(sucesor != null){
+                tratarRepetidos(f, abiertos, repetidos, sucesor);
+            }
         }
     }
+
     return null;
 }
 
+
+private static void tratarRepetidos(
+        Heuristica f, XPriorityQueue<Estado> abiertos,
+        XHashSet<Estado> repetidos, Estado sucesor)
+{
+    Estado a = abiertos.get(sucesor),
+           r = repetidos.get(sucesor);
+
+    if(a != null){ //si ya está en abiertos
+        if(f.compare(sucesor, a) < 0){
+            abiertos.remove(a);
+            abiertos.add(sucesor);
+        }
+    }else if(r != null){
+        if(f.compare(sucesor, r) < 0){
+            abiertos.add(sucesor);
+            repetidos.remove(r);
+        }
+    }else{
+        abiertos.add(sucesor);
+    }
+}
 
 private static void printSolucion(String algoritmo, Estado e)
 {

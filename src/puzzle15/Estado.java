@@ -24,7 +24,7 @@ public Estado(int...f)
     /*
     Aquí hay que comprobar que hay 16 fichas, y que no hay fichas repetidas. 
     */
-    //throw new UnsupportedOperationException("Falta implementar");
+    
     profundidad = 0;
     posHueco = new int[2];
     matriz = new int[4][4];
