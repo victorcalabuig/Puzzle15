@@ -31,6 +31,8 @@ public Estado(int...f)
     matriz = new int[4][4];
     int x = 0;
     int y = 0;
+    // cada ficha argumento se intenta extraer de la lista enlazada fichas. 
+    // Si se extrae es correcta, sino es repetida o fuera del rango 0-15. 
     for (int i:f){
         String num = String.valueOf(i);
         if (fichas.indexOf(num) != -1){
@@ -56,6 +58,9 @@ public Estado(int...f)
             y++;
         }
     }
+    if(!fichas.isEmpty())
+        throw new UnsupportedOperationException("Puzzle incorrecto: "
+                + "faltan " + fichas.size() + " fichas.");
 }
 
 public Estado(Estado e)
