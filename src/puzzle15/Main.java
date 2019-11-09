@@ -47,14 +47,14 @@ private static Estado busquedaAnchura(Estado inicial)
     nodosExplorados = 0;
     while(!abiertos.isEmpty()){
         Estado actual = abiertos.removeFirst();
+        nodosExplorados++;
         if(actual.esObjetivo()){
             return actual;
         }
         
         for(Operador o : movimientos){
             Estado sucesor = o.run(actual);
-            if(sucesor != null && repetidos.add(sucesor)){
-                nodosExplorados++;
+            if(sucesor != null && repetidos.add(sucesor)){                
                 abiertos.add(sucesor);
             }
             
@@ -102,28 +102,28 @@ private static Estado busquedaHeuristicaManhattan(Estado inicial)
 }
 
 
-private static Estado busquedaProfundidadAux(Estado inicial, int limite)
+private static Estado busquedaProfundidadAux(Estado inicial, int profundidad)
 {
     HashSet<Estado> repetidos = new HashSet<>();
     Stack<Estado> abiertos = new Stack<>();
     abiertos.add(inicial);
     while(!abiertos.isEmpty()){
         Estado actual = abiertos.pop();
+        nodosExplorados++;
         if(actual.esObjetivo())
             return actual;
         
-        if(actual.getProfundidad() < limite){
+        if(actual.getProfundidad() < profundidad){
             for(Operador o : movimientos){
-                Estado sucesor = o.run(actual);
-                                  //¿¿quizá debería ponerse despues de comprobar si no es repetido??
+                Estado sucesor = o.run(actual);                                
             
                 if(sucesor != null && repetidos.add(sucesor)){
-                    abiertos.add(sucesor);
-                    nodosExplorados++;
+                    abiertos.add(sucesor);                    
                 }
             }
         }    
     }
+    System.out.println("HOLAAAA");
     return null;    
 }
 

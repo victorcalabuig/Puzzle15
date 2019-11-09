@@ -58,7 +58,7 @@ public Estado(int...f)
             y++;
         }
     }
-    if(!fichas.isEmpty())
+    if(!fichas.isEmpty())   //Si no se han extraido las 15 fichas (+hueco)
         throw new UnsupportedOperationException("Puzzle incorrecto: "
                 + "faltan " + fichas.size() + " fichas.");
 }
