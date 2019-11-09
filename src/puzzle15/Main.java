@@ -118,12 +118,11 @@ private static Estado busquedaProfundidadAux(Estado inicial, int profundidad)
                 Estado sucesor = o.run(actual);                                
             
                 if(sucesor != null && repetidos.add(sucesor)){
-                    abiertos.add(sucesor);                    
+                    abiertos.add(sucesor);  
                 }
             }
         }    
-    }
-    System.out.println("HOLAAAA");
+    }  
     return null;    
 }
 
@@ -201,16 +200,18 @@ private static void printSolucion(String algoritmo, Estado e)
 
 
 private static void printTraza(Estado e){
-    
-    if(e.getPadre() == null){
-        System.out.println("------------");   
+    if(e != null)
+    {
+        if(e.getPadre() == null){
+            System.out.println("------------");   
+            System.out.println(e);
+        }
+        else {
+            printTraza(e.getPadre());
+                }
+        System.out.println("------------");
         System.out.println(e);
     }
-    else {
-        printTraza(e.getPadre());
-            }
-    System.out.println("------------");
-    System.out.println(e);
 }
 
 
