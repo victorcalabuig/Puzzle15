@@ -64,23 +64,55 @@ private static Estado busquedaAnchura(Estado inicial)
    
 }   
 
+private static boolean esRepetido(XHashSet<Estado> repetidos, Estado sucesor)
+{
+    Estado r = repetidos.get(sucesor);
+    if(r == null){
+        repetidos.add(sucesor);
+        return false;
+    }else if(r.getProfundidad() <= sucesor.getProfundidad()) {
+        return true;
+    }else{
+        repetidos.remove(r);
+        repetidos.add(sucesor);
+        return false;
+    }
+    
+}
 
 /*
 Se puede implementar de forma recursiva, sería una buena práctica.
 */
 private static Estado busquedaProfundidad(Estado inicial, int limite)
 {
-    nodosExplorados = 0;
-    return busquedaProfundidadAux(inicial, limite);
+    XHashSet<Estado> repetidos = new XHashSet<>();
+    Stack<Estado> abiertos = new Stack<>();
+    abiertos.add(inicial);
+    while(!abiertos.isEmpty()){
+        Estado actual = abiertos.pop();
+        nodosExplorados++;
+        if(actual.esObjetivo())
+            return actual;
+        
+        if(actual.getProfundidad() < limite){
+            for(Operador o : movimientos){
+                Estado sucesor = o.run(actual);                                
+            
+                if(sucesor != null && !esRepetido(repetidos, sucesor)){
+                    abiertos.add(sucesor);  
+                }
+            }
+        }    
+    }  
+    return null;    
 }
 
 
 private static Estado busquedaProfundidadIterativa(Estado inicial, int limite)
 {
-    nodosExplorados = 0;
     int profundidad = 0;
     while(profundidad < limite){
-       Estado solucion = busquedaProfundidadAux(inicial, profundidad);
+       Estado solucion = busquedaProfundidad(inicial, profundidad);
        if(solucion != null)
            return solucion;
        else
@@ -100,32 +132,6 @@ private static Estado busquedaHeuristicaManhattan(Estado inicial)
 {
     return busquedaHeuristica(inicial, manhattan);
 }
-
-
-private static Estado busquedaProfundidadAux(Estado inicial, int profundidad)
-{
-    HashSet<Estado> repetidos = new HashSet<>();
-    Stack<Estado> abiertos = new Stack<>();
-    abiertos.add(inicial);
-    while(!abiertos.isEmpty()){
-        Estado actual = abiertos.pop();
-        nodosExplorados++;
-        if(actual.esObjetivo())
-            return actual;
-        
-        if(actual.getProfundidad() < profundidad){
-            for(Operador o : movimientos){
-                Estado sucesor = o.run(actual);                                
-            
-                if(sucesor != null && repetidos.add(sucesor)){
-                    abiertos.add(sucesor);  
-                }
-            }
-        }    
-    }  
-    return null;    
-}
-
 
 private static Estado busquedaHeuristica(Estado inicial, Heuristica f)
 {
