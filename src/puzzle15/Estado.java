@@ -1,41 +1,63 @@
 package puzzle15;
 
-
 import java.util.*;
 
 /**
- * Estado del 15-puzzle.
+ * Estado del 15-puzzle. Representa la disposicióñn del puzzle en un instante 
+ * dado.
  */
 public class Estado implements Comparable<Estado>
 {
-    //attributos:
-   private int[][] matriz;  
-   private int[] posHueco;
-   private Estado padre;
-   private int profundidad;
+	/**
+	 * Matriz 4x4 de enteros (0->15) que almacena el número de cada ficha y su 
+	 * posición actual en el puzzle. 
+	 */
+	private int[][] matriz; 
+	
+	/**
+	 * Array de dos posiciones que almacena las coordenadas x-y (filas-columnas) 
+	 * actuales del hueco del puzzle, que se representa en la matriz con el 
+	 * número 0.
+	 */
+    private int[] posHueco;
+    
+    /**
+     * Estado anterior del puzzle, antes del último movimiento.
+     */
+    private Estado padre;
+    
+    /**
+     * Indica la profundidad, refiriendose esta al número de movimientos totales
+     * desde el estado inicial (profundidad 0) hasta el actual. 
+     */
+    private int profundidad;
    
     
 /**
- * Construye un estado a partir de un array de fichas.
+ * Constructor que genera un estado nuevo a partir de un array de fichas.
+ * 
  * @param f Lista de las 16 fichas (15 y el hueco) del puzzle.
  */
 public Estado(int...f)
 {
-    //La lista enlazada se utiliza para controlar que no hayan fichas repetidas.
-    LinkedList<String> fichas = new LinkedList<>();
-    for(int i = 0; i < 16; i++){
-        fichas.add(String.valueOf(i));
-    }
+	//para controlar fichas repetidas
+    LinkedList<String> fichas = new LinkedList<>(); 
+    for(int i = 0; i < 16; i++) fichas.add(String.valueOf(i));
+    
     profundidad = 0;
     posHueco = new int[2];
     matriz = new int[4][4];
-    int x = 0;
+    
+    //coordenadas para rellenar la matriz de fichas (x->fila; y->columna)
+    int x = 0; 
     int y = 0;
-    // cada ficha argumento se intenta extraer de la lista enlazada fichas. 
-    // Si se extrae es correcta, sino es repetida o fuera del rango 0-15. 
-    for (int i:f){
+    
+    // cada ficha de f se intenta extraer de la lista enlazada fichas. 
+    // Si se extrae es correcta, sino, es repetida o fuera del rango 0-15. 
+    for (int i:f)
+    {
         String num = String.valueOf(i);
-        if (fichas.indexOf(num) != -1){
+        if (fichas.indexOf(num) != -1){ //ficha correcta
             fichas.remove(num);
         }else{
             if(fichas.isEmpty())
@@ -46,7 +68,7 @@ public Estado(int...f)
                         "Puzzle incorrecto: Hay fichas repetidas");
         }
         
-        matriz[x][y] = i;
+        matriz[x][y] = i; //insertar ficha y comprobar si es el hueco (0)
         if (i == 0){
             posHueco[0] = x;
             posHueco[1] = y;
@@ -63,19 +85,24 @@ public Estado(int...f)
                 + "faltan " + fichas.size() + " fichas.");
 }
 
+/**
+ * Constructor que genera un nuevo estado a partir de un estado previo cuando
+ * se realiza un movimiento en el estado previo. 
+ * 
+ * @param e Estado previo/padre del nuevo estado, antes del último movimiento.
+ */
 public Estado(Estado e)
 {
     profundidad = e.profundidad + 1;
-    int x = e.posHueco[0];
-    int y = e.posHueco[1];
+    
     posHueco = new int[2];
-    posHueco[0] = x;
-    posHueco[1] = y;
+    posHueco[0] = e.posHueco[0];
+    posHueco[1] = e.posHueco[1];
     
     padre = e;
     matriz = new int[4][4];
-    for(x = 0; x<4; x++){
-        for (y=0; y<4; y++){
+    for(int x = 0; x<4; x++){
+        for (int y=0; y<4; y++){
             matriz[x][y] = e.matriz[x][y];
         }
     }
