@@ -10,7 +10,7 @@ public class Main
 {
 
 /**
- * Tiempo de ejecución.
+ * Variable utilizada para calcular el tiempo de ejecución.
  */
 private static long milisInicio;
 
@@ -287,25 +287,29 @@ private static void printSolucion(String algoritmo, Estado e)
 }
 
 /**
- * 
- * @param e
+ * Imprime por la salida estándar la traza de la solución, imprimiendo primero
+ * el estado inicial, seguido del estado siguiente, hasta llegar al estado objetivo,
+ * utilizando una estrategia recursiva.
+ * @param e Estado solución. 
  */
 private static void printTraza(Estado e){
     if(e != null)
     {
-        if(e.getPadre() == null){ //se trata del nodo inicial
-            System.out.println("------------");   
-            System.out.println(e);
-        }
-        else {
-            printTraza(e.getPadre());
-                }
+        if(e.getPadre() != null) //se trata del nodo inicial
+        	printTraza(e.getPadre());
         System.out.println("------------");
         System.out.println(e);
     }
 }
 
 
+/**
+ * Método main en el que se puede ejecutar cualquiera de los 5 algoritmos de
+ * búsqueda sobre cualquiera de los puzzles que hay en puzzles[]. 
+ * 
+ * @param args El primer número indica el algoritmo (0-4) y el segundo el 
+ * segundo el puzzle a resolver. 
+ */
 public static void main(String args[])
 {
     String algoritmos[] = {
@@ -316,7 +320,7 @@ public static void main(String args[])
         "Búsqueda con heurística de distancias Manhattan"
     };
 
-    if(args.length != 2)
+    if(args.length != 2) //parámetros incorrectos
     {
         System.out.println("\n PARÁMETROS: algoritmo puzzle\n");
 
