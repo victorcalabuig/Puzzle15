@@ -1,2 +1,4 @@
 classes/
 makefile
+.classpath
+.project

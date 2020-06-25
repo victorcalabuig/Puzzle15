@@ -86,111 +86,106 @@ public Estado(int...f)
 }
 
 /**
- * Constructor que genera un nuevo estado a partir de un estado previo cuando
- * se realiza un movimiento en el estado previo. 
+ * Constructor que genera un nuevo estado a partir de un estado previo/padre.
+ * El estado nuevo es idéntico al padre, excepto en la profundidad, que aumenta
+ * en 1. Este estado luego será modificado más adelante para representar un 
+ * movimiento.
  * 
- * @param e Estado previo/padre del nuevo estado, antes del último movimiento.
+ * @param e Estado padre.
  */
 public Estado(Estado e)
 {
     profundidad = e.profundidad + 1;
-    
+    padre = e;
     posHueco = new int[2];
     posHueco[0] = e.posHueco[0];
     posHueco[1] = e.posHueco[1];
     
-    padre = e;
     matriz = new int[4][4];
     for(int x = 0; x<4; x++){
         for (int y=0; y<4; y++){
             matriz[x][y] = e.matriz[x][y];
         }
-    }
-    
-    
+    } 
 }
 
 /**
  * Devuelve el estado padre.
+ * 
  * @return estado padre
  */
 public Estado getPadre()
 {
-    //throw new UnsupportedOperationException("Falta implementar");
     return padre;
 }
 
 /**
  * Devuelve la profundidad del estado.
+ * 
  * @return profundidad
  */
 public int getProfundidad()
 {
-    //throw new UnsupportedOperationException("Falta implementar");
     return profundidad;
 }
 
 /**
- * Calcula el código hash.
+ * Calcula el código hash de un estado, utilizando para ello la matriz 4x4 
+ * que lo representa.
+ * 
  * @return Código hash.
  */
-@Override public int hashCode()
+@Override 
+public int hashCode()
 {
     return Arrays.deepHashCode(matriz);
     //si fuera array: return Arrays.hashCode(array);
 }
 
 /**
- * Compara un estado con otro objeto.
- * @param obj Objeto a comparar.
- * @return {@code true} si el estado es igual al objeto.
+ * Comprueba si dos estados son iguales. Dos estaados son iguales si sus 
+ * matrices de fichas son iguales. 
+ * 
+ * @param obj Estado a comparar.
+ * @return {@code true} Si los dos estados son iguales.
  */
-@Override public boolean equals(Object obj)
+@Override 
+public boolean equals(Object obj)
 {
-    /*if(obj == this){
-        return true;
-    */
-    
     if(!(obj instanceof Estado))
         return false;
-    
-    //throw new UnsupportedOperationException("Falta implementar");
     Estado estado = (Estado) obj;
     return compareTo(estado) == 0;
 }
 
 /**
  * Compara un estado con otro.
- * <p>Aparentemente esta comparación no tiene sentido,
- * pero es necesaria para utilizar la cola de prioridad.
- * @param e estado
- * @return un número negativo, cero, o positivo si este estado
- *         es menor, igual, o mayour que el estado indicado.
+ * <p>Aparentemente esta comparación no tiene sentido, pero es necesaria 
+ * para utilizar la cola de prioridad.
+ * 
+ * @param e Estado a comparar
+ * @return un número negativo, cero, o positivo si este estadoes menor, 
+ * igual, o mayor que el estado indicado.
  */
-@Override public int compareTo(Estado e)
+@Override 
+public int compareTo(Estado e)
 {
     for (int x=0; x<4; x++){
         for (int y=0; y<4; y++){
             int r = Integer.compare(matriz[x][y], e.matriz[x][y]);
-            
-            if(r != 0)
-                return r;
+            if(r != 0) return r;
         }
     }
-    
     return 0;
 }
 
 /**
- * Comprueba si el estado es el objetivo.
- * @return {@code true} si el estado es el objetivo.
+ * Comprueba si el estado es el objetivo (solución del puzzle).
+ * 
+ * @return {@code true} Si el estado es el objetivo final.
  */
 public boolean esObjetivo()
 {
-    /*
-    matriz[i][j] == i*4 +j;
-    */
-    //throw new UnsupportedOperationException("Falta implementar");
     int val = 0;
     for (int x=0; x<4; x++){
         for (int y=0; y<4; y++){
@@ -203,14 +198,15 @@ public boolean esObjetivo()
     return true;        
 }
 
+/**
+ * Mueve la ficha 0 (el hueco) a la fila superior, si se puede. 
+ * 
+ * @return El estado resultante tras el movimiento o null si el movimiento
+ * no puede realizarse.
+ */
 public Estado moverArriba()
 {
-    /*
-    Estado s = new Estado(this);
-    mover el hueco en s
-    return s;
-    */
-    if (this.posHueco[0] == 0){     //Si hueco en fila 0, no se puede mover 
+    if (this.posHueco[0] == 0){ //Si hueco en fila 0, no se puede mover 
         return null;
     }
     else{
@@ -218,15 +214,21 @@ public Estado moverArriba()
         int x = posHueco[0];                    
         int y = posHueco[1];
         sucesor.matriz[x][y] = sucesor.matriz[x-1][y];
-        sucesor.matriz[x-1][y] = 0;     //movimiento del hueco
+        sucesor.matriz[x-1][y] = 0;  
         sucesor.posHueco[0] = x-1;
         return sucesor;
     }
 }
 
+/**
+ * Mueve la ficha 0 (el hueco) a la fila inferior, si se puede. 
+ * 
+ * @return El estado resultante tras el movimiento o null si el movimiento
+ * no puede realizarse.
+ */
 public Estado moverAbajo()
 {
-    if (this.posHueco[0] == 3){     //Si hueco en fila 3, no se puede mover 
+    if (this.posHueco[0] == 3){ //Si hueco en fila 3, no se puede mover 
         return null;
     }
     else{
@@ -234,16 +236,21 @@ public Estado moverAbajo()
         int x = posHueco[0];                    
         int y = posHueco[1];
         sucesor.matriz[x][y] = sucesor.matriz[x+1][y];
-        sucesor.matriz[x+1][y] = 0;     //movimiento del hueco
+        sucesor.matriz[x+1][y] = 0;    
         sucesor.posHueco[0] = x+1;
-    
         return sucesor;
     }
 }
 
+/**
+ * Mueve la ficha 0 (el hueco) a la columna izquierda, si se puede. 
+ * 
+ * @return El estado resultante tras el movimiento o null si el movimiento
+ * no puede realizarse.
+ */
 public Estado moverIzquierda()
 {
-    if (this.posHueco[1] == 0){     //Si hueco en columna 0, no se puede mover 
+    if (this.posHueco[1] == 0){ //Si hueco en columna 0, no se puede mover 
         return null;
     }
     else{
@@ -251,12 +258,18 @@ public Estado moverIzquierda()
         int x = posHueco[0];                    
         int y = posHueco[1];
         sucesor.matriz[x][y] = sucesor.matriz[x][y-1];
-        sucesor.matriz[x][y-1] = 0;     //movimiento del hueco
+        sucesor.matriz[x][y-1] = 0; 
         sucesor.posHueco[1] = y-1;
         return sucesor;
     }
 }
 
+/**
+ * Mueve la ficha 0 (el hueco) a la columna derecha, si se puede. 
+ * 
+ * @return El estado resultante tras el movimiento o null si el movimiento
+ * no puede realizarse.
+ */
 public Estado moverDerecha()
 {
     if (this.posHueco[1] == 3){     //Si hueco en columna 3, no se puede mover 
@@ -271,16 +284,24 @@ public Estado moverDerecha()
     }
 }
 
-
-
-
-
+/**
+ * Devuelve la ficha del puzzle indicada por las coordenadas. 
+ * 
+ * @param x Fila en la que se encuentra la ficha.
+ * @param y Columna en la que se encuentra la ficha.
+ * @return Número de la ficha. 
+ */
 public int getValorAt(int x, int y){
     return matriz[x][y];
 }
 
-
-
+/**
+ * Intercambia la posición del hueco (ficha 0) por la posición indicada. 
+ * 
+ * @param hueco Posición inicial del hueco.
+ * @param i Posición a la que se desea mover el hueco.
+ * @param matriz Matriz del estado del puzzle.
+ */
 public static void intercambio(int[] hueco, int[] i, int[][] matriz){
     int x = hueco[0];
     int y = hueco[1];
@@ -288,6 +309,15 @@ public static void intercambio(int[] hueco, int[] i, int[][] matriz){
     matriz[i[0]][i[1]] = 0;
 }
 
+/**
+ * Cuenta el número de fichas descolocadas que hay en el puzzle. Cualquier 
+ * ficha que esté en una posición de la matriz distinta a la posición en la que
+ * estára en la solución final se considera descolocada. Este método lo utiliza 
+ * la heurística de fichas descolocadas para saber cómo de cerca está un puzzle
+ * de la solución final.
+ * 
+ * @return Número de fichas descolocadas.
+ */
 public int getFichasDescolocadas()
 {
     int descolocadas = 0;
@@ -302,6 +332,14 @@ public int getFichasDescolocadas()
     return descolocadas;
 }
 
+/**
+ * Calcula la suma de las distancias que tiene que recorrer cada ficha del 
+ * puzzle para situarse en la posición de la solución final. No se tiene en 
+ * cuenta el hueco (ficha 0) para que la heurística sea optimista. Este 
+ * método lo utiliza la heurística de distancias Manhattan. 
+ * 
+ * @return Suma de distancias.
+ */
 public int getDistanciasManhattan()
 {
     int distancia = 0;
@@ -319,9 +357,12 @@ public int getDistanciasManhattan()
     return distancia;
 }
 
-/*
-Encuentra la posición de una ficha en la matriz del estado
-*/
+/**
+ * Devuelve la las coordenadas (fila,columna) de la ficha indicada.
+ * 
+ * @param ficha Ficha a buscar. 
+ * @return Array de dos posiciones con la fila y la columna.
+ */
 private int[] encontrar(int ficha)
 {
     int[] pos = new int[2];
@@ -337,15 +378,26 @@ private int[] encontrar(int ficha)
     return pos;
 }
 
+/**
+ * Calcula la distancia entre dos fichas, que se representan por su posición
+ * en la matriz del puzzle. 
+ * 
+ * @param a Coordenadas (fila columna) de la ficha a
+ * @param b Coordenadas de la ficha b.
+ * @return Distancia entre las dos fichas.
+ */
 private int getDistancia(int[] a, int[] b){
     int distX = Math.abs(a[0] - b[0]);
     int distY = Math.abs(a[1] - b[1]);
     return distX + distY;
 }
 
-
-
-@Override public String toString()
+/**
+ * Genera una representación String de un estado, utilizando su matriz de 
+ * fichas (el hueco ya no se representa con un 0, sino con 3 espacios en blanco.
+ */
+@Override 
+public String toString()
 {
     StringBuilder sb = new StringBuilder();
     
@@ -361,23 +413,7 @@ private int getDistancia(int[] a, int[] b){
         
         sb.append('\n');
     }
-
     return sb.toString();
-    
-    /*
-    Si lo tuvieramos como array:
-    for (int i = 0; i < 16; i++)
-    {
-        int ficha = array[i];
-        
-        if(ficha == 0)
-            sb.append("   ");
-        else
-            sb.append(String.format("%3d", ficha);
-        if(i%4 == 3)
-            sb.append('\n');
-    }
-    */
 }
 
 } // Estado
